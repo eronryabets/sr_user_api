@@ -6,6 +6,10 @@ class CustomUser(models.Model):
     # ID, который будет приходить из сервиса авторизации (обязательно должен быть передан)
     id = models.UUIDField(primary_key=True, editable=False)
 
+    # Имя и фамилия пользователя
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+
     # Аватарка пользователя (загрузка изображений в папку avatars/)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 
