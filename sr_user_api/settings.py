@@ -70,7 +70,7 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    # 'sr_user_api.middleware.JWTAuthenticationFromCookiesMiddleware',
+    'sr_user_api.middleware.JWTAuthenticationFromCookiesMiddleware',
 ]
 
 ROOT_URLCONF = 'sr_user_api.urls'
@@ -107,6 +107,12 @@ DATABASES = {
         "HOST": env('DATABASE_HOST_USER_API'),
         "PORT": env('DATABASE_PORT_USER_API'),
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
 
 # Password validation
