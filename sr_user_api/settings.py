@@ -11,21 +11,35 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+    DEBUG=bool,
+    SECRET_KEY_USER_API=str,
+
+    DATABASE_NAME_USER_API=str,
+    DATABASES_USER_USER_API=str,
+    DATABASES_PASSWORD_USER_API=str,
+    DATABASE_HOST_USER_API=str,
+    DATABASE_PORT_USER_API=(int, 5432),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(5g=jsq49t%r%763sp7+1k!ls2we2iib8^oxxxbygzzoi_@6h@'
+SECRET_KEY = env('SECRET_KEY_USER_API')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # (!) в продакшене указать конкретные домены
+# ALLOWED_HOSTS = ['custom_auth.localhost', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,6 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'corsheaders',
+    'debug_toolbar',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +67,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'sr_user_api.middleware.JWTAuthenticationFromCookiesMiddleware',
 ]
 
 ROOT_URLCONF = 'sr_user_api.urls'
@@ -75,12 +99,15 @@ WSGI_APPLICATION = 'sr_user_api.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env('DATABASE_NAME_USER_API'),
+        "USER": env('DATABASES_USER_USER_API'),
+        "PASSWORD": env('DATABASES_PASSWORD_USER_API'),
+        "HOST": env('DATABASE_HOST_USER_API'),
+        "PORT": env('DATABASE_PORT_USER_API'),
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -116,9 +143,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Путь к папке для хранения медиафайлов
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Кастомная модель нашего юзера
+# AUTH_USER_MODEL = 'custom_user.CustomUser'
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+    'localhost',
+]
+
+# CORS settings
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True  # Разрешить все источники
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # URL фронтенда
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # URL фронтенда
+]
+
