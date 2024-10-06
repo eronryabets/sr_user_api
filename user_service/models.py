@@ -24,3 +24,17 @@ class CustomUser(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    # Вся авторизация через AUTH сервис идет.
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def is_active(self):
+        return True
