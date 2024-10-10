@@ -193,12 +193,14 @@ SESSION_COOKIE_HTTPONLY = True
 CORS_ALLOWED_ORIGINS = [
     "http://auth.drunar.space",
     "http://user.drunar.space",
+    "http://text.drunar.space",
     "http://localhost:3000",  # URL фронтенда
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://auth.drunar.space",
     "http://user.drunar.space",
+    "http://text.drunar.space",
     "http://localhost:3000",  # URL фронтенда
 ]
 
