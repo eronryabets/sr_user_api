@@ -34,6 +34,7 @@ env = environ.Env(
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY_USER_API')
+JWT_SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 
     'user_service'
+
 ]
 
 MIDDLEWARE = [
@@ -73,7 +75,6 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'sr_user_api.middleware.JWTAuthenticationFromCookiesMiddleware',
 ]
 
 ROOT_URLCONF = 'sr_user_api.urls'
@@ -113,7 +114,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'sr_user_api.authentication.JWTAuthentication',
     ),
 }
 
@@ -177,11 +178,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Кастомная модель нашего юзера
-AUTH_USER_MODEL = 'user_service.CustomUser'
+# AUTH_USER_MODEL = 'user_service.CustomUser'
 
 INTERNAL_IPS = [
     '127.0.0.1',
     'localhost',
+    'drunar.space',
 ]
 
 # CORS settings
@@ -204,40 +206,40 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",  # URL фронтенда
 ]
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'verbose': {
-#             'format': '{asctime} [{levelname}] {name}: {message}',
-#             'style': '{',
-#             'datefmt': '%Y-%m-%d %H:%M:%S',  # Формат времени
-#         },
-#         'simple': {
-#             'format': '{levelname}: {message}',
-#             'style': '{',
-#         },
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'verbose',  # Используем форматтер с временной меткой
-#         },
-#     },
-#     'root': {
-#         'handlers': ['console'],
-#         'level': 'DEBUG',  # Установите уровень логирования на DEBUG для вывода всех сообщений
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',  # Уровень логирования для Django
-#             'propagate': False,
-#         },
-#         'user_service': {  # имя приложения
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#             'propagate': False,
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} [{levelname}] {name}: {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',  # Формат времени
+        },
+        'simple': {
+            'format': '{levelname}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',  # Используем форматтер с временной меткой
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',  # Установите уровень логирования на DEBUG для вывода всех сообщений
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Уровень логирования для Django
+            'propagate': False,
+        },
+        'user_service': {  # имя приложения
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

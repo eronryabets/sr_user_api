@@ -2,14 +2,16 @@ from rest_framework import generics, permissions, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import CustomUser
-from .serializers import CustomUserSerializer
+
+from sr_user_api.authentication import IsOwner
+from .models import User
+from .serializers import UserSerializer
 
 
 # Создание нового пользователя в "Юзер Сервисе"
 class CreateUserView(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]  # Так как создается после авторизации, доступ для всех
 
     def create(self, request, *args, **kwargs):
@@ -26,19 +28,19 @@ class UserProfileView(APIView):
 
     def get(self, request):
         try:
-            user = CustomUser.objects.get(id=request.user.id)
-            serializer = CustomUserSerializer(user)
+            user = User.objects.get(id=request.user.id)
+            serializer = UserSerializer(user)
             return Response(serializer.data)
-        except CustomUser.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"detail": "User not found."}, status=404)
 
     def patch(self, request):
         try:
-            user = CustomUser.objects.get(id=request.user.id)
-            serializer = CustomUserSerializer(user, data=request.data, partial=True)
+            user = User.objects.get(id=request.user.id)
+            serializer = UserSerializer(user, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=400)
-        except CustomUser.DoesNotExist:
+        except User.DoesNotExist:
             return Response({"detail": "User not found."}, status=404)

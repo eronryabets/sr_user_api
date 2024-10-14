@@ -2,7 +2,7 @@ import uuid
 from django.db import models
 
 
-class CustomUser(models.Model):
+class User(models.Model):
     # ID, который будет приходить из сервиса авторизации (обязательно должен быть передан)
     id = models.UUIDField(primary_key=True, editable=False)
 
@@ -25,16 +25,3 @@ class CustomUser(models.Model):
     def __str__(self):
         return str(self.id)
 
-    # Вся авторизация через AUTH сервис идет.
-
-    @property
-    def is_authenticated(self):
-        return True
-
-    @property
-    def is_anonymous(self):
-        return False
-
-    @property
-    def is_active(self):
-        return True
