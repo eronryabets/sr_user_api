@@ -10,6 +10,9 @@ class User(models.Model):
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
 
+    # Родной язык (на который будут переводы текста)
+    native_language = models.CharField(max_length=50, blank=True)
+
     # Аватарка пользователя (загрузка изображений в папку avatars/)
     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 

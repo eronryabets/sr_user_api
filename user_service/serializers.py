@@ -5,7 +5,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'avatar', 'settings', 'created_at', 'updated_at']
+        fields = ['id', 'first_name', 'last_name', 'native_language', 'avatar', 'settings', 'created_at', 'updated_at']
         extra_kwargs = {
             'id': {'required': True, 'read_only': False},  # Указываем, что поле id обязательно и не read-only
         }
